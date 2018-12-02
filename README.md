@@ -1,3 +1,3 @@
-# My solutions to Advent of Code 2018o
+# My solutions to Advent of Code
 
 Run tests with `clj -A:test`.
