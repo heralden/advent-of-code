@@ -48,18 +48,19 @@
   (->> (simulate data steps)
        (energy)))
 
-(defn simulate-eternity-step [[moons vels :as state] step]
+(defn simulate-eternity-step [init-state [moons vels] step]
   (let [vels' (vec (map-indexed (partial apply-velocity moons) vels))
         moons' (vec (map gravity vels' moons))
         state' [moons' vels']]
-    (if (= state' state)
+    (if (= state' init-state)
       (reduced (inc step))
       state')))
 
 (defn simulate-eternity [data]
   (let [moons (read-moons data)
-        vels (vec (repeat (count moons) (vec (repeat 3 0))))]
-    (reduce simulate-eternity-step [moons vels] (range))))
+        vels (vec (repeat (count moons) (vec (repeat 3 0))))
+        state [moons vels]]
+    (reduce (partial simulate-eternity-step state) state (range))))
 
 (defn solve2 [data]
   (simulate-eternity data))
