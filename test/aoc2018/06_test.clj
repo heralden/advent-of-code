@@ -3,7 +3,7 @@
             [clojure.java.io :as io]
             [clojure.test :refer [deftest is]]))
 
-(def raw-points (->> "06" io/resource io/reader line-seq))
+(def raw-points (->> "2018/06" io/resource io/reader line-seq))
 
 (def test-points ["1, 1"
                   "1, 6"

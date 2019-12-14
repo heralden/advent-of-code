@@ -3,7 +3,7 @@
             [clojure.java.io :as io]
             [clojure.test :refer [deftest is]]))
 
-(def records (->> "04" io/resource io/reader line-seq))
+(def records (->> "2018/04" io/resource io/reader line-seq))
 
 (def test-records
   ["[1518-11-01 00:00] Guard #10 begins shift"

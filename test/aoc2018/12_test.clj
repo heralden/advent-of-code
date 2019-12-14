@@ -3,7 +3,7 @@
             [clojure.java.io :as io]
             [clojure.test :refer [deftest is are]]))
 
-(def raw-data (->> "12" io/resource io/reader line-seq))
+(def raw-data (->> "2018/12" io/resource io/reader line-seq))
 
 (def test-data ["initial state: #..#.#..##......###...###"
                 nil

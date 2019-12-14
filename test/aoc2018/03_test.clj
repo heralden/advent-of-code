@@ -3,7 +3,7 @@
             [clojure.java.io :as io]
             [clojure.test :refer [deftest is]]))
 
-(def claims (->> "03" io/resource io/reader line-seq))
+(def claims (->> "2018/03" io/resource io/reader line-seq))
 
 (def test-claims ["#1 @ 1,3: 4x4"
                   "#2 @ 3,1: 4x4"

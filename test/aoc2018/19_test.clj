@@ -3,7 +3,7 @@
             [clojure.java.io :as io]
             [clojure.test :refer [deftest is are]]))
 
-(def raw-input (->> "19" io/resource io/reader line-seq))
+(def raw-input (->> "2018/19" io/resource io/reader line-seq))
 
 (def test-input ["#ip 0"
                  "seti 5 0 1"

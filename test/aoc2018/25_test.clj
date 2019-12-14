@@ -3,7 +3,7 @@
             [clojure.java.io :as io]
             [clojure.test :refer [deftest is are]]))
 
-(def raw-input (->> "25" io/resource io/reader line-seq))
+(def raw-input (->> "2018/25" io/resource io/reader line-seq))
 
 (def test-input1
   ["-1,2,2,0"
@@ -45,5 +45,5 @@
   (are [in exp] (= exp (solve1 in))
     test-input1 4
     test-input2 3
-    test-input3 8))
-  (is (= 363 (solve1 raw-input)))
+    test-input3 8)
+  (is (= 363 (solve1 raw-input))))

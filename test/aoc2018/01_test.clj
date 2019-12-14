@@ -3,7 +3,7 @@
             [clojure.java.io :as io]
             [clojure.test :refer [deftest is are]]))
 
-(def data (->> "01" io/resource slurp))
+(def data (->> "2018/01" io/resource slurp))
 
 (deftest test1
   (is (= 3 (solve1 "+1\n-2\n+3\n+1")))

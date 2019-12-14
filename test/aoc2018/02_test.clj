@@ -3,7 +3,7 @@
             [clojure.java.io :as io]
             [clojure.test :refer [deftest is]]))
 
-(def ids (->> "02" io/resource io/reader line-seq))
+(def ids (->> "2018/02" io/resource io/reader line-seq))
 
 (deftest test1
   (is (= 12 (solve1 ["abcdef"
