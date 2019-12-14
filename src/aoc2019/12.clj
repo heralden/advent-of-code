@@ -1,4 +1,5 @@
-(ns aoc2019.12)
+(ns aoc2019.12
+  (:require [clojure.math.numeric-tower :refer [lcm abs]]))
 
 (defn read-moons [data]
   (->> (re-seq #"-?\d+" data)
@@ -13,8 +14,8 @@
     (> a1 a2) (dec v1)
     (< a1 a2) (inc v1)))
 
-(defn velocity [[x1 y1 z1 :as _m1] [x0 y0 z0 :as _v1] [x2 y2 z2 :as _m2]]
-  [(axis x0 x1 x2) (axis y0 y1 y2) (axis z0 z1 z2)])
+(defn velocity [m1 v1 m2]
+  (mapv axis v1 m1 m2))
 
 (defn remvec [v i]
   (vec (concat (subvec v 0 i)
@@ -23,8 +24,8 @@
 (defn apply-velocity [moons i vel]
   (reduce (partial velocity (get moons i)) vel (remvec moons i)))
 
-(defn gravity [[x0 y0 z0 :as _v1] [x1 y1 z1 :as _m1]]
-  [(+ x0 x1) (+ y0 y1) (+ z0 z1)])
+(defn gravity [v1 m1]
+  (map + v1 m1))
 
 (defn simulate-step [[moons vels] _]
   (let [vels' (vec (map-indexed (partial apply-velocity moons) vels))
@@ -36,31 +37,32 @@
         vels (vec (repeat (count moons) (vec (repeat 3 0))))]
     (reduce simulate-step [moons vels] (range steps))))
 
-(defn abs [x] (Math/abs x))
-
 (defn energy [[moons vels]]
   (reduce +
           (map *
-               (map (comp #(reduce + %) #(map abs %)) moons)
-               (map (comp #(reduce + %) #(map abs %)) vels))))
+               (map #(transduce (map abs) + 0 %) moons)
+               (map #(transduce (map abs) + 0 %) vels))))
 
 (defn solve1 [steps data]
   (->> (simulate data steps)
        (energy)))
 
-(defn simulate-eternity-step [init-state [moons vels] step]
-  (let [vels' (vec (map-indexed (partial apply-velocity moons) vels))
-        moons' (vec (map gravity vels' moons))
-        state' [moons' vels']]
-    (if (= state' init-state)
-      (reduced (inc step))
-      state')))
+(defn zero-axis [vels axes]
+  (filter (fn [ax] (every? zero? (map #(nth % ax) vels))) axes))
 
-(defn simulate-eternity [data]
-  (let [moons (read-moons data)
-        vels (vec (repeat (count moons) (vec (repeat 3 0))))
-        state [moons vels]]
-    (reduce (partial simulate-eternity-step state) state (range))))
+(defn simulate-cycles [[moons vels axes res] step]
+  (let [vels' (vec (map-indexed (partial apply-velocity moons) vels))
+        moons' (vec (map gravity vels' moons))]
+    (if-let [ax (zero-axis vels' axes)]
+      (let [res' (reduce #(assoc %1 %2 step) res ax)
+            axes' (reduce #(disj %1 %2) axes ax)]
+        (if (empty? axes')
+          (reduced (map inc res'))
+          [moons' vels' axes' res']))
+      [moons' vels' axes res])))
 
 (defn solve2 [data]
-  (simulate-eternity data))
+  (let [moons (read-moons data)
+        vels (vec (repeat (count moons) (vec (repeat 3 0))))
+        [a b c] (reduce simulate-cycles [moons vels #{0 1 2} [0 0 0]] (range))]
+    (* 2 (lcm (lcm a b) c))))
