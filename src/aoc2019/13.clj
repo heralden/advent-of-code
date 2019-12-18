@@ -25,7 +25,7 @@
       (->> (for [y (range height)
                  x (range width)]
              (case (get tiles [x y])
-               0 \.  1 \X 2 \# 3 \= 4 \o))
+               0 \. 1 \X 2 \# 3 \= 4 \o))
            (partition width)
            (map string/join)
            (string/join \newline)
@@ -49,6 +49,9 @@
                      score' (if score? v score)
                      ball-x' (if (and (not score?) (= v 4)) x ball-x)
                      paddle-x' (if (and (not score?) (= v 3)) x paddle-x)]
+                 #_(when (not= paddle-x paddle-x')
+                     (print-tiles tiles')
+                     (println score'))
                  (when (not= ball-x ball-x')
                    (cond
                      (> ball-x' paddle-x') (put! in-ch 1)
